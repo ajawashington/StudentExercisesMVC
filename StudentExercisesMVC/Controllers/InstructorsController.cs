@@ -34,7 +34,9 @@ namespace StudentExercisesMVC.Controllers
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = "SELECT i.Id, i.FirstName, i.LastName, i.CohortId, i.SlackHandle, i.Specialty, c.Name  FROM Instructor i LEFT JOIN Cohort c ON i.CohortId = c.id";
+                    cmd.CommandText = "SELECT i.Id, i.FirstName, i.LastName, i.CohortId, i.SlackHandle, i.Specialty, c.Name  " +
+                        "FROM Instructor i " +
+                        "LEFT JOIN Cohort c ON i.CohortId = c.id";
 
                     var reader = cmd.ExecuteReader();
                     var instructors = new List<Instructor>();
@@ -184,7 +186,7 @@ namespace StudentExercisesMVC.Controllers
         // POST: Instructors/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteInstructor(int id, Instructor instructor)
+        public ActionResult Delete(int id, Instructor instructor)
         {
             try
             {
@@ -255,7 +257,10 @@ namespace StudentExercisesMVC.Controllers
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"SELECT i.Id, i.FirstName, i.LastName, i.CohortId, i.SlackHandle, i.Specialty, c.Name FROM Instructor i LEFT JOIN Cohort c ON i.CohortId = c.id WHERE Id = @id";
+                    cmd.CommandText = @"SELECT i.Id, i.FirstName, i.LastName, i.CohortId, i.SlackHandle, i.Specialty, c.Name 
+                                        FROM Instructor i 
+                                        LEFT JOIN Cohort c ON i.CohortId = c.id 
+                                    WHERE Id = @id";
                     cmd.Parameters.Add(new SqlParameter("@id", id));
 
                     SqlDataReader reader = cmd.ExecuteReader();
