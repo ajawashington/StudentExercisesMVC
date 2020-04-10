@@ -1,17 +1,22 @@
-﻿@model StudentExercisesMVC.Models.ViewModels.InstructorFormViewModel
+﻿@model StudentExercisesMVC.Models.ViewModels.StudentFormViewModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Edit";
 }
 
-<h1>Create</h1>
+<h1>Edit</h1>
 
-<h4>Instructor</h4>
+<h4>Student</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="SlackHandle" class="control-label"></label>
+                <input asp-for="SlackHandle" class="form-control" />
+                <span asp-validation-for="SlackHandle" class="text-danger"></span>
+            </div>
             <div class="form-group">
                 <label asp-for="FirstName" class="control-label"></label>
                 <input asp-for="FirstName" class="form-control" />
@@ -23,24 +28,12 @@
                 <span asp-validation-for="LastName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="SlackHandle" class="control-label"></label>
-                <input asp-for="SlackHandle" class="form-control" />
-                <span asp-validation-for="SlackHandle" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Specialty" class="control-label"></label>
-                <input asp-for="Specialty" class="form-control" />
-                <span asp-validation-for="Specialty" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="CohortId" class="control-label"></label>
-                <select asp-for="CohortId" asp-items="@Model.CohortOptions" class="form-control">
-                    <option>Please Select Cohort</option>
-                </select>
+                <select asp-for="CohortId" asp-items="@Model.CohortOptions" class="form-control"></select>
                 <span asp-validation-for="CohortId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
     </div>
