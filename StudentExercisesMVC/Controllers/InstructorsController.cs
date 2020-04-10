@@ -4,9 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using StudentExercisesMVC.Models;
+using StudentExercisesMVC.Models.ViewModels;
 
 namespace StudentExercisesMVC.Controllers
 {
@@ -64,7 +66,36 @@ namespace StudentExercisesMVC.Controllers
             }
         }
 
-        // GET: Instructors/Details/5
+        private List<SelectListItem> GetCohortOptions()
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "SELECT Id, Name FROM Cohort";
+
+                    var reader = cmd.ExecuteReader();
+                    var options = new List<SelectListItem>();
+
+                    while (reader.Read())
+                    {
+                        var option = new SelectListItem()
+                        {
+                            Text = reader.GetString(reader.GetOrdinal("Name")),
+                            Value = reader.GetInt32(reader.GetOrdinal("Id")).ToString()
+                        };
+
+                        options.Add(option);
+
+                    }
+                    reader.Close();
+                    return options;
+                }
+            }
+        }
+
+        // GET: Instructors/Details/1
         public ActionResult Details(int id)
         {
             var instructor = GetInstructorById(id);
@@ -73,15 +104,18 @@ namespace StudentExercisesMVC.Controllers
 
         // GET: Instructors/Create
         public ActionResult Create()
-        { 
-
-            return View();
+        {
+            var cohortOptions = GetCohortOptions();
+            var viewModel = new InstructorFormViewModel()
+            {
+                CohortOptions = cohortOptions
+            };
+            return View(viewModel);
         }
-
         // POST: Instructors/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Instructor instructor)
+        public ActionResult Create(InstructorFormViewModel instructor)
         {
             try
             {
@@ -101,7 +135,7 @@ namespace StudentExercisesMVC.Controllers
                         cmd.Parameters.Add(new SqlParameter("@specialty", instructor.Specialty));
 
                         var id = (int)cmd.ExecuteScalar();
-                        instructor.Id = id;
+                        instructor.InstructorId = id;
 
                         return RedirectToAction(nameof(Index));
                     }
@@ -115,19 +149,29 @@ namespace StudentExercisesMVC.Controllers
 
 
         // GET: Instructors/Edit/5
-      
+
         public ActionResult Edit(int id)
         {
-            
-                var instructor = GetInstructorById(id);
-                return View(instructor);
-            
+            var instructor = GetInstructorById(id);
+            var cohortOptions = GetCohortOptions();
+            var viewModel = new InstructorFormViewModel()
+            {
+                InstructorId = instructor.Id,
+                FirstName = instructor.FirstName,
+                LastName = instructor.LastName,
+                CohortId = instructor.CohortId,
+                Specialty = instructor.Specialty,
+                SlackHandle = instructor.SlackHandle,
+                CohortOptions = cohortOptions
+            };
+            return View(viewModel);
         }
+
 
         // POST: Instructors/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, Instructor instructor)
+        public ActionResult Edit(int id, [FromForm] InstructorFormViewModel instructor)
         {
             try
             {

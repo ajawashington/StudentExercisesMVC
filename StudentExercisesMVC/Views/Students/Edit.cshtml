@@ -1,4 +1,4 @@
-﻿@model StudentExercisesMVC.Models.Student
+﻿@model StudentExercisesMVC.Models.ViewModels.StudentFormViewModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -13,6 +13,11 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
+                <label asp-for="SlackHandle" class="control-label"></label>
+                <input asp-for="SlackHandle" class="form-control" />
+                <span asp-validation-for="SlackHandle" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="FirstName" class="control-label"></label>
                 <input asp-for="FirstName" class="form-control" />
                 <span asp-validation-for="FirstName" class="text-danger"></span>
@@ -23,13 +28,8 @@
                 <span asp-validation-for="LastName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="SlackHandle" class="control-label"></label>
-                <input asp-for="SlackHandle" class="form-control" />
-                <span asp-validation-for="SlackHandle" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="CohortId" class="control-label"></label>
-                <input asp-for="CohortId" class="form-control" />
+                <select asp-for="CohortId" asp-items="@Model.CohortOptions" class="form-control"></select>
                 <span asp-validation-for="CohortId" class="text-danger"></span>
             </div>
             <div class="form-group">
